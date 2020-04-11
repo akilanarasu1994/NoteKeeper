@@ -8,6 +8,7 @@ import android.view.MenuItem
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_first.*
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,9 +18,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            val originalValue = textDisplayedValue
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+
         }
     }
 
