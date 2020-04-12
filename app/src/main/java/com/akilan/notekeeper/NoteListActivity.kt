@@ -29,4 +29,10 @@ class NoteListActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        (listNotes.adapter)
+        (listNotes.adapter as ArrayAdapter<NoteInfo>).notifyDataSetChanged()
+    }
 }

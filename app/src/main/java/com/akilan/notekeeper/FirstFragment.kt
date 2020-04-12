@@ -55,6 +55,9 @@ class FirstFragment : Fragment() {
 
         if (notePosition != POSITION_NOT_SET) {
             displayNote()
+        } else {
+            DataManager.notes.add(NoteInfo())
+            notePosition = DataManager.notes.lastIndex
         }
     }
 
@@ -102,5 +105,19 @@ class FirstFragment : Fragment() {
         displayNote()
         Timber.d("moveNext(): notePosition: $notePosition")
         requireActivity().invalidateOptionsMenu()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveNote()
+    }
+
+    private fun saveNote() {
+        if (notePosition != POSITION_NOT_SET) {
+            val note = DataManager.notes[notePosition]
+            note.title = textNoteTitle.text.toString()
+            note.text = textNoteText.text.toString()
+            note.course = spinnerCourses.selectedItem as CourseInfo
+        }
     }
 }
