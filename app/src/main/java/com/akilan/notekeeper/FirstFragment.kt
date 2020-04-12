@@ -2,14 +2,16 @@ package com.akilan.notekeeper
 
 import android.content.Context
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
+import androidx.core.app.ActivityCompat.getDrawable
+import androidx.core.app.ActivityCompat.invalidateOptionsMenu
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_first.*
+import timber.log.Timber
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -22,6 +24,11 @@ class FirstFragment : Fragment() {
         arguments?.getInt(EXTRA_NOTE_POSITION, POSITION_NOT_SET)?.let {
             notePosition = it
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -58,5 +65,42 @@ class FirstFragment : Fragment() {
 
         val coursePosition = DataManager.courses.values.indexOf(note.course)
         spinnerCourses.setSelection(coursePosition)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_main, menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        if (notePosition >= DataManager.notes.lastIndex) {
+            val menuItem = menu.findItem(R.id.action_next)
+            menuItem.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_block_white_24dp)
+            menuItem.isEnabled = false
+            notePosition = 0
+        }
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            R.id.action_next -> {
+                moveNext()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun moveNext() {
+//        notePosition = (notePosition + 1) % DataManager.notes.size
+        ++notePosition
+        displayNote()
+        Timber.d("moveNext(): notePosition: $notePosition")
+        requireActivity().invalidateOptionsMenu()
     }
 }
