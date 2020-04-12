@@ -25,7 +25,7 @@ class NoteListActivity : AppCompatActivity() {
 
         listNotes.setOnItemClickListener { parent, view, position, id ->
             val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra(EXTRA_NOTE_POSITION, position)
+            intent.putExtra(NOTE_POSITION, position)
             startActivity(intent)
         }
     }

@@ -6,8 +6,6 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.ArrayAdapter
 import android.widget.Button
-import androidx.core.app.ActivityCompat.getDrawable
-import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_first.*
@@ -21,7 +19,7 @@ class FirstFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        arguments?.getInt(EXTRA_NOTE_POSITION, POSITION_NOT_SET)?.let {
+        arguments?.getInt(NOTE_POSITION, POSITION_NOT_SET)?.let {
             notePosition = it
         }
     }
@@ -119,5 +117,18 @@ class FirstFragment : Fragment() {
             note.text = textNoteText.text.toString()
             note.course = spinnerCourses.selectedItem as CourseInfo
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(NOTE_POSITION, notePosition)
+        Timber.d("Saved note position: $notePosition")
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        notePosition = savedInstanceState?.getInt(NOTE_POSITION, POSITION_NOT_SET) ?: arguments?.getInt(
+            NOTE_POSITION, POSITION_NOT_SET) ?: POSITION_NOT_SET
+        Timber.d("Restored Note position: $notePosition")
     }
 }
